@@ -1,4 +1,4 @@
---Copyright (C) 2017-2022 D4KiR (https://www.gnu.org/licenses/gpl.txt)
+--Copyright (C) 2017-2022 D4KiR (https://www.gnu.org/licenses/gpl.txt)  Will be used
 
 local leftedPlys = {}
 function GM:PlayerDisconnected(ply)
@@ -81,7 +81,7 @@ function GM:PlayerInitialSpawn(ply)
 				end
 
 				local cuid = YRPCreateCharacter( ply, tab )
-			
+
 				ply:KillSilent()
 
 				ply:UserGroupLoadout()
@@ -138,7 +138,7 @@ hook.Add( "Think", "yrp_banhackers", function()
 				ply:Kick( "HACKS DETECTED! VAC BAN INCOMING" )
 			end
 		end
-		
+
 		if ConVar and ConVar( "sv_allowcslua" ) and ConVar( "sv_allowcslua" ):GetBool() then
 			local text = "[sv_allowcslua] is enabled, clients can use Scripts!"
 			PrintMessage( HUD_PRINTCENTER, text )
@@ -160,11 +160,11 @@ hook.Add( "CheckPassword", "YRP_ALLOWED_COUNTRIES", function( steamID64, ipAddre
 end )
 
 hook.Add( "PlayerAuthed", "yrp_PlayerAuthed", function(ply, steamid, uniqueid)
-	
+
 	YRP.msg( "gm", "[PlayerAuthed] " .. ply:YRPName() .. " | " .. tostring(steamid) .. " | " .. tostring(uniqueid) )
-	
+
 	ply:SetYRPBool( "yrpspawnedwithcharacter", false)
-	
+
 	if hackers[ ply:SteamID() ] or hackers[ ply:YRPSteamID() ] or hackers[ steamid ] then
 		ply:Ban( 0 )
 		ply:Kick( "HACKS DETECTED! VAC BAN INCOMING" )
@@ -186,7 +186,7 @@ hook.Add( "PlayerAuthed", "yrp_PlayerAuthed", function(ply, steamid, uniqueid)
 		if !wk( chars) then
 			local tab = {}
 			tab.roleID = 1
-			tab.rpname = ply:Nick()		
+			tab.rpname = ply:Nick()
 			tab.playermodelID = 1
 			tab.skin = 1
 			tab.rpdescription = "-"
@@ -236,14 +236,14 @@ end
 
 function YRPSetBodyGroups( ply )
 	ply:YRPUpdateAppearance()
-	
+
 	local rolTab = ply:YRPGetRoleTable()
 	if wk(rolTab) and tonumber( rolTab.bool_savebodygroups ) == 1 then
 		local chaTab = ply:YRPGetCharacterTable()
 		if wk( chaTab ) then
 			ply:SetSkin( chaTab.skin)
 			ply:SetupHands()
-			
+
 			for i = 0, 19 do
 				ply:SetBodygroup(i, chaTab["bg" .. i])
 			end
@@ -271,7 +271,7 @@ function YRPPlayerLoadout( ply )
 		ply:SetYRPString( "licenseIDs2", "" )
 		ply:SetYRPString( "licenseIDs3", "" )
 		ply:SetYRPInt( "licenseIDsVersion", ply:GetYRPInt( "licenseIDsVersion", 0 ) + 1 )
-		
+
 		ply:StripWeapons()
 		--YRP.msg( "gm", "[PlayerLoadout] " .. ply:YRPName() .. " get his role equipment." )
 		YRP:Loadout(ply)
@@ -289,7 +289,7 @@ function YRPPlayerLoadout( ply )
 			local plyT = ply:GetPlyTab()
 			if wk(plyT) then
 				ply:SetupCharID()
-				
+
 				local _rol_tab = ply:YRPGetRoleTable()
 				if wk(_rol_tab) then
 					SetRole(ply, _rol_tab.uniqueID)
@@ -313,7 +313,7 @@ function YRPPlayerLoadout( ply )
 						ply:SetYRPBool( "moneyready", true )
 
 						ply:SetYRPString( "rpname", chaTab.rpname)
-					
+
 						ply:SetYRPString( "rpdescription", chaTab.rpdescription)
 						for i, v in pairs(string.Explode( "\n", chaTab.rpdescription) ) do
 							ply:SetYRPString( "rpdescription" .. i, v)
@@ -588,7 +588,7 @@ function PLAYER:CreateRagdoll()
 		if !IsValid(rd) then
 			YRP.msg( "note", "[DoPlayerDeath] Spawn Defi Ragdoll... FAILED: rd is not valid" )
 		elseif ply:GetModel() != nil then
-			YRP.msg( "note", "[DoPlayerDeath] GetModel... FAILED: nil" )	
+			YRP.msg( "note", "[DoPlayerDeath] GetModel... FAILED: nil" )
 		end
 	end
 end
@@ -598,11 +598,11 @@ function PLAYER:AddPlayTime(force)
 		-- Calculate Time
 		if self.yrp_ts_oldchar then -- ADD TIME FOR OLD CHAR
 			local playtime = os.time() - self:GetYRPInt( "ts_spawned", os.time() )
-			
+
 			local tab = YRP_SQL_SELECT( "yrp_characters", "uniqueID, text_playtime", "uniqueID = '" .. self.yrp_ts_oldchar .. "'" )
 			if wk(tab) then
 				local oldplaytime = tab[1].text_playtime
-				
+
 				YRP_SQL_UPDATE( "yrp_characters", {["text_playtime"] = oldplaytime + playtime}, "uniqueID = '" .. self.yrp_ts_oldchar .. "'" )
 			end
 		end
@@ -636,7 +636,7 @@ function GM:DoPlayerDeath( ply, attacker, dmginfo )
 
 	-- NEW RAGDOLL
 	--[[if GetGlobalYRPBool( "bool_spawncorpseondeath", true) then
-	
+
 		ply.rd = ents.Create( "prop_ragdoll" )
 		if IsValid(ply.rd) and ply:GetModel() != nil then
 			ply.rd:SetModel(ply:GetModel() )
@@ -666,7 +666,7 @@ function GM:DoPlayerDeath( ply, attacker, dmginfo )
 			if !IsValid(ply.rd) then
 				YRP.msg( "error", "[DoPlayerDeath] Spawn Defi Ragdoll... FAILED: ply.rd is not valid" )
 			elseif ply:GetModel() != nil then
-				YRP.msg( "error", "[DoPlayerDeath] GetModel... FAILED: nil" )	
+				YRP.msg( "error", "[DoPlayerDeath] GetModel... FAILED: nil" )
 			end
 			if ea(ply.rd) then
 				ply.rd:Remove()
@@ -958,7 +958,7 @@ hook.Add( "ScalePlayerDamage", "YRP_ScalePlayerDamage", function(ply, hitgroup, 
 			if IsValid( attacker) and attacker:IsPlayer() then
 				YRP_SQL_INSERT_INTO( "yrp_logs",	"string_timestamp, string_typ, string_source_steamid, string_target_steamid, string_value", "'" .. os.time() .. "' ,'LID_health', '" .. attacker:SteamID() .. "', '" .. ply:SteamID() .. "', '" .. dmginfo:GetDamage() .. "'" )
 			else
-				YRP_SQL_INSERT_INTO( "yrp_logs",	"string_timestamp, string_typ, string_target_steamid, string_value, string_alttarget", "'" .. os.time() .. "' ,'LID_health', '" .. ply:SteamID() .. "', '" .. damage .. "', '" .. attacker:GetName() .. attacker:GetClass() .. "'" )	
+				YRP_SQL_INSERT_INTO( "yrp_logs",	"string_timestamp, string_typ, string_target_steamid, string_value, string_alttarget", "'" .. os.time() .. "' ,'LID_health', '" .. ply:SteamID() .. "', '" .. damage .. "', '" .. attacker:GetName() .. attacker:GetClass() .. "'" )
 			end
 		end
 	end
@@ -1053,7 +1053,7 @@ function GenerateVoiceTable()
 
 			-- Hear?
 			yrp_voice_channels[tonumber( channel.uniqueID)]["int_hear"] = tobool( channel.int_hear)
-			
+
 			-- MODE
 			yrp_voice_channels[tonumber( channel.uniqueID)]["string_mode"] = tonumber( channel.string_mode)
 
@@ -1244,7 +1244,7 @@ net.Receive( "yrp_voice_channel_save", function(len, ply)
 	local prols = table.concat(net.ReadTable(), "," )
 
 	local uid = net.ReadString()
-	
+
 	YRP_SQL_UPDATE(DATABASE_NAME, {
 		["string_name"] 				= name,
 		["int_hear"] 					= hear,
@@ -1266,7 +1266,7 @@ net.Receive( "yrp_voice_channel_rem", function(len, ply)
 	YRP_SQL_DELETE_FROM(DATABASE_NAME, "uniqueID = '" .. uid .. "'" )
 
 	GenerateVoiceTable()
-	
+
 	local c = 0
 	for i, channel in SortedPairsByMemberValue(GetGlobalYRPTable( "yrp_voice_channels", {}), "int_position" ) do
 		channel.int_position = tonumber( channel.int_position)
@@ -1370,14 +1370,14 @@ end
 
 function YRPSwitchToVoiceChannel(ply, uid)
 	if !ply:GetYRPBool( "yrp_voice_channel_mutemic_" .. uid, true) then
-		ply:SetYRPBool( "yrp_voice_channel_mutemic_" .. uid, true) 
+		ply:SetYRPBool( "yrp_voice_channel_mutemic_" .. uid, true)
 	else
 		--[[for i, channel in SortedPairsByMemberValue(GetGlobalYRPTable( "yrp_voice_channels", {}), "int_position", false) do
 			if !ply:GetYRPBool( "yrp_voice_channel_mutemic_" .. channel.uniqueID, true) then
 				ply:SetYRPBool( "yrp_voice_channel_mute_" .. channel.uniqueID, false)
 			end
 		end]]
-	
+
 		for i, channel in SortedPairsByMemberValue(GetGlobalYRPTable( "yrp_voice_channels", {}), "int_position", false) do
 			if channel.uniqueID == uid then
 				ply:SetYRPBool( "yrp_voice_channel_mutemic_" .. channel.uniqueID, false)
@@ -1397,7 +1397,7 @@ net.Receive( "mutemic_channel", function(len, ply)
 	local uid = net.ReadString()
 	uid = uid or "0"
 	uid = tonumber(uid)
-	
+
 	if !ply:GetYRPBool( "yrp_voice_channel_mute_" .. uid, false) then
 		ply:SetYRPBool( "yrp_voice_channel_mute_" .. uid, true)
 	end
@@ -1411,9 +1411,9 @@ end)
 util.AddNetworkString( "mute_channel" )
 net.Receive( "mute_channel", function(len, ply)
 	local uid = net.ReadString()
-	
+
 	if !ply:GetYRPBool( "yrp_voice_channel_mutemic_" .. uid, false) then
-		ply:SetYRPBool( "yrp_voice_channel_mutemic_" .. uid, true) 
+		ply:SetYRPBool( "yrp_voice_channel_mutemic_" .. uid, true)
 	end
 
 	ply:SetYRPBool( "yrp_voice_channel_mute_" .. uid, !ply:GetYRPBool( "yrp_voice_channel_mute_" .. uid, false) )
@@ -1468,7 +1468,7 @@ function YRPMoveAllToNext( ply )
 				if found and ply:GetYRPBool( "yrp_voice_channel_mute_" .. channel.uniqueID) == false then
 					ply:SetYRPBool( "yrp_voice_channel_mutemic_" .. channel.uniqueID, false)
 					ply:SetYRPBool( "yrp_voice_channel_mute_" .. channel.uniqueID, true)
-	
+
 					found = false
 				end
 			end
@@ -1538,7 +1538,7 @@ hook.Add( "PlayerCanHearPlayersVoice", "YRP_voicesystem", function(listener, tal
 				end
 			end
 		end
-		
+
 		return false -- new
 	elseif GetGlobalYRPBool( "bool_voice_3d", false) then
 		if YRPIsInMaxVoiceRange(listener, talker) then
@@ -1599,7 +1599,7 @@ end)
 
 function YRPWarning( text )
 	MsgC( Color( 255, 0, 0 ), "[WARNING] " .. text .. "\n" )
-			
+
 end
 
 function YRPInfo( text )
@@ -1619,7 +1619,7 @@ function YRPCheckAddons( force )
 			table.insert( tabwar, "[" .. v.wsid .. "] [" .. v.title .. "] breaks Give Function of Weapons\n> For Example in Shops or other addons that want to give a weapon\n> F8 -> General -> Disable \"Auto pickup\" => for manual pickup of weapons" )
 			count = count + 1
 		end
-			
+
 		if ( string.find( v.searchtitle, "workshop", 1, true ) and string.find( v.searchtitle, "download", 1, true ) ) or string.find( v.searchtitle, "addon share", 1, true ) or string.find( v.searchtitle, "fastdl", 1, true ) then -- "Workshop Downloader Addons"
 			table.insert( tabwar, "[" .. v.wsid .. "] [" .. v.title .. "] already implemented in YourRP!" )
 			count = count + 1
@@ -1740,7 +1740,7 @@ net.Receive( "yrp_import_darkrp", function( len, ply )
 
 	YRPImportFileToTable( "lua/darkrp_customthings/categories.lua", "categories" )
 	YRPImportFileToTable( "lua/darkrp_customthings/jobs.lua", "jobs" )
-	
+
 	YRPMsg( "[DONE IMPORT DARKRP]", Color( 0, 255, 0 ) )
 	YRPHR()
 end )
